@@ -1,6 +1,6 @@
-# HealthyFoodChecker - European Standards
+# EuroFoodReview - European Standards
 
-**HealthyFoodChecker** is a mobile/web application that helps users assess whether the food they're about to consume meets European health standards. By analyzing the nutritional content and ingredients of various food products, it provides clear and actionable insights on whether the food aligns with EU health guidelines.
+**EuroFoodReview** is a mobile/web application that helps users assess whether the food they're about to consume meets European health standards. By analyzing the nutritional content and ingredients of various food products, it provides clear and actionable insights on whether the food aligns with EU health guidelines.
 
 ---
 
