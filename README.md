@@ -2,7 +2,7 @@
 
 **EuroFoodReview** is a mobile/web application that helps users assess whether the food they're about to consume meets European health standards. By analyzing the nutritional content and ingredients of various food products, it provides clear and actionable insights on whether the food aligns with EU health guidelines.
 
-![EuroFoodReview](https://imgur.com/0ea8e375-0b6c-4928-bcea-58f7f8c8e007)
+![EuroFoodReview](https://i.imgur.com/NwuHUIq.png)
 
 ---
 
