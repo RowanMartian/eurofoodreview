@@ -8,6 +8,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Euro Food Review">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="https://i.imgur.com/wF9JLXA.png">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -35,19 +37,13 @@
         }
 
         @keyframes gradientBG {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             padding-top: env(safe-area-inset-top);
@@ -59,19 +55,24 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
+            text-align: center;
         }
 
         h1 {
+            flex: 1;
+            text-align: center;
+            margin-right: 100px;
             color: var(--text-primary);
             font-size: 28px;
             font-weight: 700;
-            margin: 0;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             font-family: 'Fira Mono', monospace;
             font-style: italic;
         }
 
         .github-profile {
+            min-width: 200px;
+            justify-content: flex-end;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -87,6 +88,7 @@
         }
 
         .scanner-card {
+            margin-top: 20px;
             background: var(--card-background);
             border-radius: 16px;
             padding: 16px;
@@ -128,30 +130,22 @@
             font-style: italic;
         }
 
-        .warning {
-            color: var(--danger-red);
-        }
+        .warning { color: var(--danger-red); }
+        .safe { color: var(--success-green); }
 
-        .safe {
-            color: var(--success-green);
-        }
-
-        #product-details {
-            text-align: left;
-        }
-
-        #product-details h3 {
-            color: var(--primary-blue);
-            font-size: 20px;
-            margin-bottom: 16px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        .product-details-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-top: 20px;
         }
 
         .info-row {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
             padding: 12px;
             background-color: var(--secondary-background);
             border-radius: 8px;
+            height: fit-content;
         }
 
         .info-label {
@@ -166,7 +160,13 @@
             text-transform: capitalize;
         }
 
-        /* Profile footer styles */
+        #product-details h3 {
+            color: var(--primary-blue);
+            font-size: 20px;
+            margin-bottom: 16px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
         .profile-footer {
             position: fixed;
             bottom: 0;
@@ -179,6 +179,8 @@
             padding-bottom: calc(16px + var(--safe-area-inset-bottom));
             border-top: 1px solid var(--card-border);
             display: none;
+            height: 60px;
+            z-index: 100;
         }
 
         .profile-footer-content {
@@ -189,11 +191,13 @@
             margin: 0 auto;
             text-decoration: none;
             color: var(--text-primary);
+            height: 100%;
+            padding: 8px 16px;
         }
 
         .profile-footer img {
-            width: 48px;
-            height: 48px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: 2px solid var(--primary-blue);
         }
@@ -213,9 +217,19 @@
         }
 
         @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+                padding-bottom: 80px;
+            }
+
             .header-container {
                 flex-direction: column;
                 gap: 16px;
+                margin-bottom: 16px;
+            }
+
+            h1 {
+                margin-right: 0;
             }
 
             .github-profile {
@@ -223,9 +237,8 @@
             }
 
             .scanner-card {
-                margin: -20px;
+                margin: 0 -16px 16px -16px;
                 border-radius: 0;
-                padding: 20px;
             }
 
             #scanner {
@@ -234,12 +247,19 @@
                 height: 250px;
             }
 
+            .result-card {
+                margin-bottom: 80px;
+            }
+
+            .product-details-grid {
+                grid-template-columns: 1fr;
+            }
+
             .profile-footer {
                 display: block;
             }
         }
 
-        /* iOS specific styles */
         @supports (-webkit-touch-callout: none) {
             body {
                 min-height: -webkit-fill-available;
@@ -266,19 +286,44 @@
             
             <div id="product-details">
                 <h3>Product Information</h3>
-                <div class="info-row">
-                    <div class="info-label">Name</div>
-                    <div id="product-name" class="info-content">-</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Ingredients</div>
-                    <div id="ingredients" class="info-content">-</div>
+                <div class="product-details-grid">
+                    <div class="info-row">
+                        <div class="info-label">Name</div>
+                        <div id="product-name" class="info-content">-</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Brand</div>
+                        <div id="brand" class="info-content">-</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Ingredients</div>
+                        <div id="ingredients" class="info-content">-</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Allergens</div>
+                        <div id="allergens" class="info-content">-</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Nutrition Score</div>
+                        <div id="nutriscore" class="info-content">-</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Country of Origin</div>
+                        <div id="origin" class="info-content">-</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Serving Size</div>
+                        <div id="serving-size" class="info-content">-</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Categories</div>
+                        <div id="categories" class="info-content">-</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Mobile Profile Footer -->
     <footer class="profile-footer">
         <a href="https://github.com/RowanMartian" target="_blank" class="profile-footer-content">
             <img src="https://avatars.githubusercontent.com/u/193378969?v=4" alt="RowanMartian">
@@ -291,12 +336,10 @@
 
     <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
     <script>
-        // Platform detection
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
                       (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
         const isAndroid = /Android/.test(navigator.userAgent);
 
-        // Apply platform-specific classes
         if (isIOS) {
             document.body.classList.add('ios-device');
         } else if (isAndroid) {
@@ -377,8 +420,7 @@
                     }
                 })
                 .catch(error => {
-                    console.error('Error fetching product data:', error);
-                    resultElement.textContent = "Error fetching product data.";
+                    console.error('Error fetching product data:', error);resultElement.textContent = "Error fetching product data.";
                     resultElement.classList.add('warning');
                 });
         }
@@ -386,9 +428,24 @@
         function displayProductInfo(product) {
             const productName = product.product_name ? toTitleCase(product.product_name) : "Unknown Product";
             const ingredients = product.ingredients_text || "No ingredients listed.";
+            const brand = product.brands ? toTitleCase(product.brands) : "Unknown Brand";
+            const allergens = product.allergens_tags ? 
+                product.allergens_tags.map(a => toTitleCase(a.replace('en:', ''))).join(', ') : 
+                "Not specified";
+            const nutriscore = product.nutriscore_grade ? 
+                product.nutriscore_grade.toUpperCase() : "Not available";
+            const origin = product.countries ? toTitleCase(product.countries) : "Not specified";
+            const servingSize = product.serving_size || "Not specified";
+            const categories = product.categories ? toTitleCase(product.categories) : "Not specified";
 
             productNameElement.textContent = productName;
+            document.getElementById('brand').textContent = brand;
             ingredientsElement.textContent = ingredients;
+            document.getElementById('allergens').textContent = allergens;
+            document.getElementById('nutriscore').textContent = nutriscore;
+            document.getElementById('origin').textContent = origin;
+            document.getElementById('serving-size').textContent = servingSize;
+            document.getElementById('categories').textContent = categories;
 
             let bannedFound = false;
             bannedIngredients.forEach(ingredient => {
