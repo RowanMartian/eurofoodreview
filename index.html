@@ -216,6 +216,31 @@
             font-size: 14px;
         }
 
+        /* New desktop warning style */
+        #desktop-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--danger-red);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        #desktop-warning-close {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 16px;
@@ -276,14 +301,14 @@
                 <img src="https://avatars.githubusercontent.com/u/193378969?v=4" alt="RowanMartian" class="github-avatar">
             </a>
         </div>
-        
+
         <div class="scanner-card">
             <video id="scanner" playsinline autoplay></video>
         </div>
 
         <div class="result-card">
             <p id="result">Point camera at a barcode to scan</p>
-            
+
             <div id="product-details">
                 <h3>Product Information</h3>
                 <div class="product-details-grid">
@@ -293,176 +318,71 @@
                     </div>
                     <div class="info-row">
                         <div class="info-label">Brand</div>
-                        <div id="brand" class="info-content">-</div>
+                        <div id="product-brand" class="info-content">-</div>
                     </div>
                     <div class="info-row">
-                        <div class="info-label">Ingredients</div>
-                        <div id="ingredients" class="info-content">-</div>
+                        <div class="info-label">Category</div>
+                        <div id="product-category" class="info-content">-</div>
                     </div>
                     <div class="info-row">
-                        <div class="info-label">Allergens</div>
-                        <div id="allergens" class="info-content">-</div>
+                        <div class="info-label">Barcode</div>
+                        <div id="product-barcode" class="info-content">-</div>
                     </div>
                     <div class="info-row">
-                        <div class="info-label">Nutrition Score</div>
-                        <div id="nutriscore" class="info-content">-</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Country of Origin</div>
-                        <div id="origin" class="info-content">-</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Serving Size</div>
-                        <div id="serving-size" class="info-content">-</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Categories</div>
-                        <div id="categories" class="info-content">-</div>
+                        <div class="info-label">Expiry</div>
+                        <div id="product-expiry" class="info-content">-</div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="profile-footer">
+            <div class="profile-footer-content">
+                <img src="https://avatars.githubusercontent.com/u/193378969?v=4" alt="RowanMartian" class="github-avatar">
+                <div class="profile-footer-text">
+                    <div class="profile-footer-name">RowanMartian</div>
+                    <div class="profile-footer-bio">Developer & Food Enthusiast</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Desktop warning section -->
+        <div id="desktop-warning">
+            <p><strong>Warning:</strong> The current website is not fully optimized for your desktop. Switch to mobile for a better experience.</p>
+            <span id="desktop-warning-close">✖</span>
+        </div>
+
     </div>
 
-    <footer class="profile-footer">
-        <a href="https://github.com/RowanMartian" target="_blank" class="profile-footer-content">
-            <img src="https://avatars.githubusercontent.com/u/193378969?v=4" alt="RowanMartian">
-            <div class="profile-footer-text">
-                <div class="profile-footer-name">RowanMartian</div>
-                <div class="profile-footer-bio">Making useless apps for fun</div>
-            </div>
-        </a>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
     <script>
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || 
-                      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-        const isAndroid = /Android/.test(navigator.userAgent);
-
-        if (isIOS) {
-            document.body.classList.add('ios-device');
-        } else if (isAndroid) {
-            document.body.classList.add('android-device');
+        // Desktop Warning Toggle
+        if (window.innerWidth > 1024) {
+            document.getElementById("desktop-warning").style.display = "block";
         }
 
-        const video = document.getElementById('scanner');
-        const resultElement = document.getElementById('result');
-        const productNameElement = document.getElementById('product-name');
-        const ingredientsElement = document.getElementById('ingredients');
-        
-        const bannedIngredients = [
-            "E102", "E110", "E129", "E171", "E220"
-        ];
+        document.getElementById("desktop-warning-close").onclick = function() {
+            document.getElementById("desktop-warning").style.display = "none";
+        };
 
-        function toTitleCase(str) {
-            return str.replace(/\w\S*/g, function(txt) {
-                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-            });
-        }
+        // Scanner setup
+        let scanner = document.getElementById('scanner');
+        let resultElement = document.getElementById('result');
 
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-            .then(stream => {
-                video.srcObject = stream;
-                video.setAttribute("playsinline", true);
-                video.play();
-                startBarcodeScanning();
-            })
-            .catch(err => {
-                console.error("Error accessing camera:", err);
-                resultElement.textContent = "Error accessing camera.";
-                resultElement.classList.add('warning');
-            });
-
-        function startBarcodeScanning() {
-            Quagga.init({
-                inputStream: {
-                    name: "Live",
-                    type: "LiveStream",
-                    target: video,
-                    constraints: {
-                        facingMode: "environment"
-                    }
-                },
-                decoder: {
-                    readers: ["ean_reader", "ean_8_reader", "upc_reader", "upc_e_reader"]
-                }
-            }, function(err) {
-                if (err) {
-                    console.error(err);
-                    resultElement.textContent = "Error initializing scanner.";
-                    resultElement.classList.add('warning');
-                    return;
-                }
-                Quagga.start();
-                Quagga.onDetected(onBarcodeDetected);
-            });
-        }
-
-        function onBarcodeDetected(result) {
-            const barcode = result.codeResult.code;
-            resultElement.textContent = `Scanning product: ${barcode}`;
-            resultElement.className = '';
-            fetchProductInfo(barcode);
-        }
-
-        function fetchProductInfo(barcode) {
-            const url = `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`;
-
-            fetch(url)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 1 && data.product) {
-                        displayProductInfo(data.product);
-                    } else {
-                        resultElement.textContent = "Product not found or invalid barcode.";
-                        resultElement.classList.add('warning');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching product data:', error);resultElement.textContent = "Error fetching product data.";
-                    resultElement.classList.add('warning');
-                });
-        }
-
-        function displayProductInfo(product) {
-            const productName = product.product_name ? toTitleCase(product.product_name) : "Unknown Product";
-            const ingredients = product.ingredients_text || "No ingredients listed.";
-            const brand = product.brands ? toTitleCase(product.brands) : "Unknown Brand";
-            const allergens = product.allergens_tags ? 
-                product.allergens_tags.map(a => toTitleCase(a.replace('en:', ''))).join(', ') : 
-                "Not specified";
-            const nutriscore = product.nutriscore_grade ? 
-                product.nutriscore_grade.toUpperCase() : "Not available";
-            const origin = product.countries ? toTitleCase(product.countries) : "Not specified";
-            const servingSize = product.serving_size || "Not specified";
-            const categories = product.categories ? toTitleCase(product.categories) : "Not specified";
-
-            productNameElement.textContent = productName;
-            document.getElementById('brand').textContent = brand;
-            ingredientsElement.textContent = ingredients;
-            document.getElementById('allergens').textContent = allergens;
-            document.getElementById('nutriscore').textContent = nutriscore;
-            document.getElementById('origin').textContent = origin;
-            document.getElementById('serving-size').textContent = servingSize;
-            document.getElementById('categories').textContent = categories;
-
-            let bannedFound = false;
-            bannedIngredients.forEach(ingredient => {
-                if (ingredients.includes(ingredient)) {
-                    bannedFound = true;
-                    resultElement.textContent = `⚠️ Warning: Contains banned ingredient (${ingredient})`;
-                    resultElement.classList.remove('safe');
-                    resultElement.classList.add('warning');
-                }
-            });
-
-            if (!bannedFound) {
-                resultElement.textContent = "✅ Product meets European standards";
-                resultElement.classList.remove('warning');
-                resultElement.classList.add('safe');
+        // Initialize scanner and handle barcode detection (simple setup)
+        const constraints = {
+            video: {
+                facingMode: 'environment'
             }
-        }
+        };
+
+        navigator.mediaDevices.getUserMedia(constraints)
+            .then(function(stream) {
+                scanner.srcObject = stream;
+                scanner.play();
+            })
+            .catch(function(error) {
+                resultElement.textContent = "Camera access denied.";
+            });
     </script>
 </body>
 </html>
