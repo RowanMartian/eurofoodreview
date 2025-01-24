@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#0A84FF">
+    <title>Euro Food Review</title>
+    <!-- iOS specific meta tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Euro Food Review">
-    <title>Euro Food Review</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="https://i.imgur.com/wF9JLXA.png">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Mono:wght@700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -38,13 +35,19 @@
         }
 
         @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .container {
-            max-width: 800px;
+            max-width: 600px;
             margin: 0 auto;
             padding: 20px;
             padding-top: env(safe-area-inset-top);
@@ -56,24 +59,20 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
-            text-align: center;
         }
 
         h1 {
-            flex: 1;
-            text-align: center;
-            margin-right: 100px;
             color: var(--text-primary);
             font-size: 28px;
             font-weight: 700;
+            margin: 0;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             font-family: 'Fira Mono', monospace;
             font-style: italic;
+            padding-top: 10px; /* Adjusted to prevent clipping */
         }
 
         .github-profile {
-            min-width: 200px;
-            justify-content: flex-end;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -89,7 +88,6 @@
         }
 
         .scanner-card {
-            margin-top: 20px;
             background: var(--card-background);
             border-radius: 16px;
             padding: 16px;
@@ -108,24 +106,6 @@
             margin: 0 auto;
             display: block;
             background-color: #000;
-        }
-
-        #camera-permission-btn {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary-blue);
-            color: var(--text-primary);
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            margin-top: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        #camera-permission-btn:hover {
-            background-color: #0A64D0;
         }
 
         .result-card {
@@ -149,22 +129,30 @@
             font-style: italic;
         }
 
-        .warning { color: var(--danger-red); }
-        .safe { color: var(--success-green); }
+        .warning {
+            color: var(--danger-red);
+        }
 
-        .product-details-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            margin-top: 20px;
+        .safe {
+            color: var(--success-green);
+        }
+
+        #product-details {
+            text-align: left;
+        }
+
+        #product-details h3 {
+            color: var(--primary-blue);
+            font-size: 20px;
+            margin-bottom: 16px;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         .info-row {
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             padding: 12px;
             background-color: var(--secondary-background);
             border-radius: 8px;
-            height: fit-content;
         }
 
         .info-label {
@@ -179,101 +167,41 @@
             text-transform: capitalize;
         }
 
-        #product-details h3 {
-            color: var(--primary-blue);
-            font-size: 20px;
-            margin-bottom: 16px;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        .profile-footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: var(--card-background);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            padding: 16px;
-            padding-bottom: calc(16px + var(--safe-area-inset-bottom));
-            border-top: 1px solid var(--card-border);
-            display: none;
-            height: 60px;
-            z-index: 100;
-        }
-
-        .profile-footer-content {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            max-width: 600px;
-            margin: 0 auto;
-            text-decoration: none;
-            color: var(--text-primary);
-            height: 100%;
-            padding: 8px 16px;
-        }
-
-        .profile-footer img {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid var(--primary-blue);
-        }
-
-        .profile-footer-text {
-            flex: 1;
-        }
-
-        .profile-footer-name {
-            font-weight: bold;
-            margin-bottom: 4px;
-        }
-
-        .profile-footer-bio {
-            color: var(--text-secondary);
-            font-size: 14px;
-        }
-
-        /* New desktop warning style */
-        #desktop-warning {
-            display: none;
+        .modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background-color: var(--danger-red);
-            color: white;
-            text-align: center;
-            padding: 15px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             z-index: 1000;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
         }
 
-        #desktop-warning-close {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
+        .modal-content {
+            background: var(--card-background);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            max-width: 90%;
+        }
+
+        .modal-content button {
+            margin-top: 16px;
+            background: var(--primary-blue);
+            color: var(--text-primary);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 20px;
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 16px;
-                padding-bottom: 80px;
-            }
-
             .header-container {
                 flex-direction: column;
                 gap: 16px;
-                margin-bottom: 16px;
-            }
-
-            h1 {
-                margin-right: 0;
             }
 
             .github-profile {
@@ -281,26 +209,15 @@
             }
 
             .scanner-card {
-                margin: 0 -16px 16px -16px;
+                margin: -20px;
                 border-radius: 0;
+                padding: 20px;
             }
 
             #scanner {
                 width: 100%;
                 max-width: none;
                 height: 250px;
-            }
-
-            .result-card {
-                margin-bottom: 80px;
-            }
-
-            .product-details-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .profile-footer {
-                display: block;
             }
         }
 
@@ -322,8 +239,7 @@
         </div>
 
         <div class="scanner-card">
-            <video id="scanner" playsinline></video>
-            <button id="camera-permission-btn">Request Camera Access</button>
+            <video id="scanner" playsinline autoplay></video>
         </div>
 
         <div class="result-card">
@@ -331,94 +247,160 @@
 
             <div id="product-details">
                 <h3>Product Information</h3>
-                <div class="product-details-grid">
-                    <div class="info-row">
-                        <div class="info-label">Name</div>
-                        <div id="product-name" class="info-content">-</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Brand</div>
-                        <div id="product-brand" class="info-content">-</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Category</div>
-                        <div id="product-category" class="info-content">-</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Barcode</div>
-                        <div id="product-barcode" class="info-content">-</div>
-                    </div>
-                    <div class="info-row">
-                        <div class="info-label">Expiry</div>
-                        <div id="product-expiry" class="info-content">-</div>
-                    </div>
+                <div class="info-row">
+                    <div class="info-label">Name</div>
+                    <div id="product-name" class="info-content">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Ingredients</div>
+                    <div id="ingredients" class="info-content">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Origin</div>
+                    <div id="product-origin" class="info-content">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Packaging</div>
+                    <div id="product-packaging" class="info-content">-</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Nutritional Facts</div>
+                    <div id="product-nutrition" class="info-content">-</div>
                 </div>
             </div>
         </div>
-
-        <div class="profile-footer">
-            <div class="profile-footer-content">
-                <img src="https://avatars.githubusercontent.com/u/193378969?v=4" alt="RowanMartian" class="github-avatar">
-                <div class="profile-footer-text">
-                    <div class="profile-footer-name">RowanMartian</div>
-                    <div class="profile-footer-bio">Developer & Food Enthusiast</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Desktop warning section -->
-        <div id="desktop-warning">
-            <p><strong>Warning:</strong> The current website is not fully optimized for your desktop. Switch to mobile for a better experience.</p>
-            <span id="desktop-warning-close">✖</span>
-        </div>
-
     </div>
 
+    <div id="desktop-warning-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <p>This app is not maintained or built for desktop use. For best experience, use on mobile devices.</p>
+            <button onclick="closeModal()">I Understand</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/quagga@0.12.1/dist/quagga.min.js"></script>
     <script>
-        // Desktop Warning Toggle
-        if (window.innerWidth > 1024) {
-            document.getElementById("desktop-warning").style.display = "block";
+        const isDesktop = !/Mobi|Android/i.test(navigator.userAgent);
+        const modal = document.getElementById('desktop-warning-modal');
+
+        if (isDesktop) {
+            modal.style.display = 'flex';
         }
 
-        document.getElementById("desktop-warning-close").onclick = function() {
-            document.getElementById("desktop-warning").style.display = "none";
-        };
+        function closeModal() {
+            modal.style.display = 'none';
+        }
 
-        // Scanner and Camera Permission Setup
-        let scanner = document.getElementById('scanner');
-        let resultElement = document.getElementById('result');
-        let cameraPermissionBtn = document.getElementById('camera-permission-btn');
+        const video = document.getElementById('scanner');
+        const resultElement = document.getElementById('result');
+        const productNameElement = document.getElementById('product-name');
+        const ingredientsElement = document.getElementById('ingredients');
+        const productOriginElement = document.getElementById('product-origin');
+        const productPackagingElement = document.getElementById('product-packaging');
+        const productNutritionElement = document.getElementById('product-nutrition');
 
-        // Camera access constraints
-        const constraints = {
-            video: {
-                facingMode: 'environment'
-            }
-        };
+        const bannedIngredients = ["E102", "E110", "E129", "E171", "E220"];
 
-        // Function to request camera access
-        function requestCameraAccess() {
-            navigator.mediaDevices.getUserMedia(constraints)
-                .then(function(stream) {
-                    scanner.srcObject = stream;
-                    scanner.play();
-                    
-                    // Hide the permission button once access is granted
-                    cameraPermissionBtn.style.display = 'none';
-                    
-                    // Update result text
-                    resultElement.textContent = "Camera access granted. Point at a barcode to scan.";
-                    resultElement.classList.remove('warning');
-                    resultElement.classList.add('safe');
+        function toTitleCase(str) {
+            return str.replace(/\w\S*/g, function(txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+        }
+
+        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+            .then(stream => {
+                video.srcObject = stream;
+                video.setAttribute("playsinline", true);
+                video.play();
+                startBarcodeScanning();
+            })
+            .catch(err => {
+                console.error("Error accessing camera:", err);
+                resultElement.textContent = "Error accessing camera.";
+                resultElement.classList.add('warning');
+            });
+
+        function startBarcodeScanning() {
+            Quagga.init({
+                inputStream: {
+                    name: "Live",
+                    type: "LiveStream",
+                    target: video,
+                    constraints: {
+                        facingMode: "environment"
+                    }
+                },
+                decoder: {
+                    readers: ["ean_reader", "ean_8_reader", "upc_reader", "upc_e_reader"]
+                }
+            }, function(err) {
+                if (err) {
+                    console.error(err);
+                    resultElement.textContent = "Error initializing scanner.";
+                    resultElement.classList.add('warning');
+                    return;
+                }
+                Quagga.start();
+                Quagga.onDetected(onBarcodeDetected);
+            });
+        }
+
+        function onBarcodeDetected(result) {
+            const barcode = result.codeResult.code;
+            resultElement.textContent = `Scanning product: ${barcode}`;
+            resultElement.className = '';
+            fetchProductInfo(barcode);
+        }
+
+        function fetchProductInfo(barcode) {
+            const url = `https://world.openfoodfacts.org/api/v0/product/${barcode}.json`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 1 && data.product) {
+                        displayProductInfo(data.product);
+                    } else {
+                        resultElement.textContent = "Product not found or invalid barcode.";
+                        resultElement.classList.add('warning');
+                    }
                 })
-                .catch(function(error) {
-                    resultElement.textContent = "Camera access denied. Please check permissions.";
+                .catch(error => {
+                    console.error('Error fetching product data:', error);
+                    resultElement.textContent = "Error fetching product data.";
                     resultElement.classList.add('warning');
                 });
         }
 
-        // Add click event to camera permission button
-        cameraPermissionBtn.addEventListener('click', requestCameraAccess);
+        function displayProductInfo(product) {
+            const productName = product.product_name ? toTitleCase(product.product_name) : "Unknown Product";
+            const ingredients = product.ingredients_text || "No ingredients listed.";
+            const origin = product.countries_tags?.join(', ') || "Unknown origin.";
+            const packaging = product.packaging || "Not specified.";
+            const nutrition = product.nutriments ? JSON.stringify(product.nutriments, null, 2) : "N/A";
+
+            productNameElement.textContent = productName;
+            ingredientsElement.textContent = ingredients;
+            productOriginElement.textContent = origin;
+            productPackagingElement.textContent = packaging;
+            productNutritionElement.textContent = nutrition;
+
+            let bannedFound = false;
+            bannedIngredients.forEach(ingredient => {
+                if (ingredients.includes(ingredient)) {
+                    bannedFound = true;
+                    resultElement.textContent = `⚠️ Warning: Contains banned ingredient (${ingredient})`;
+                    resultElement.classList.remove('safe');
+                    resultElement.classList.add('warning');
+                }
+            });
+
+            if (!bannedFound) {
+                resultElement.textContent = "✅ Product meets European standards";
+                resultElement.classList.remove('warning');
+                resultElement.classList.add('safe');
+            }
+        }
     </script>
 </body>
 </html>
