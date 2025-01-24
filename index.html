@@ -167,6 +167,23 @@
             text-transform: capitalize;
         }
 
+        .nutrition-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .nutrition-item {
+            background-color: var(--secondary-background);
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .nutrition-item .label {
+            font-weight: bold;
+            color: var(--primary-blue);
+        }
+
         .modal {
             position: fixed;
             top: 0;
@@ -265,7 +282,7 @@
                 </div>
                 <div class="info-row">
                     <div class="info-label">Nutritional Facts</div>
-                    <div id="product-nutrition" class="info-content">-</div>
+                    <div id="product-nutrition" class="nutrition-grid"></div>
                 </div>
             </div>
         </div>
@@ -377,13 +394,16 @@
             const ingredients = product.ingredients_text || "No ingredients listed.";
             const origin = product.countries_tags?.join(', ') || "Unknown origin.";
             const packaging = product.packaging || "Not specified.";
-            const nutrition = product.nutriments ? JSON.stringify(product.nutriments, null, 2) : "N/A";
+            const nutrition = product.nutriments || {};
 
             productNameElement.textContent = productName;
             ingredientsElement.textContent = ingredients;
             productOriginElement.textContent = origin;
             productPackagingElement.textContent = packaging;
-            productNutritionElement.textContent = nutrition;
+
+            productNutritionElement.innerHTML = Object.entries(nutrition).map(([key, value]) => {
+                return `<div class="nutrition-item"><span class="label">${toTitleCase(key.replace('_', ' '))}:</span> ${value}</div>`;
+            }).join('');
 
             let bannedFound = false;
             bannedIngredients.forEach(ingredient => {
