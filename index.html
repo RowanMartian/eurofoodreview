@@ -110,6 +110,24 @@
             background-color: #000;
         }
 
+        #camera-permission-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-blue);
+            color: var(--text-primary);
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #camera-permission-btn:hover {
+            background-color: #0A64D0;
+        }
+
         .result-card {
             background: var(--card-background);
             border-radius: 16px;
@@ -304,7 +322,8 @@
         </div>
 
         <div class="scanner-card">
-            <video id="scanner" playsinline autoplay></video>
+            <video id="scanner" playsinline></video>
+            <button id="camera-permission-btn">Request Camera Access</button>
         </div>
 
         <div class="result-card">
@@ -365,25 +384,41 @@
             document.getElementById("desktop-warning").style.display = "none";
         };
 
-        // Scanner setup
+        // Scanner and Camera Permission Setup
         let scanner = document.getElementById('scanner');
         let resultElement = document.getElementById('result');
+        let cameraPermissionBtn = document.getElementById('camera-permission-btn');
 
-        // Initialize scanner and handle barcode detection (simple setup)
+        // Camera access constraints
         const constraints = {
             video: {
                 facingMode: 'environment'
             }
         };
 
-        navigator.mediaDevices.getUserMedia(constraints)
-            .then(function(stream) {
-                scanner.srcObject = stream;
-                scanner.play();
-            })
-            .catch(function(error) {
-                resultElement.textContent = "Camera access denied.";
-            });
+        // Function to request camera access
+        function requestCameraAccess() {
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(function(stream) {
+                    scanner.srcObject = stream;
+                    scanner.play();
+                    
+                    // Hide the permission button once access is granted
+                    cameraPermissionBtn.style.display = 'none';
+                    
+                    // Update result text
+                    resultElement.textContent = "Camera access granted. Point at a barcode to scan.";
+                    resultElement.classList.remove('warning');
+                    resultElement.classList.add('safe');
+                })
+                .catch(function(error) {
+                    resultElement.textContent = "Camera access denied. Please check permissions.";
+                    resultElement.classList.add('warning');
+                });
+        }
+
+        // Add click event to camera permission button
+        cameraPermissionBtn.addEventListener('click', requestCameraAccess);
     </script>
 </body>
 </html>
