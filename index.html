@@ -52,6 +52,9 @@
             padding: 20px;
             padding-top: env(safe-area-inset-top);
             min-height: calc(100vh - 80px - var(--safe-area-inset-bottom));
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
         .header-container {
@@ -96,16 +99,18 @@
             border: 1px solid var(--card-border);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         #scanner {
             width: 100%;
             max-width: 300px;
-            height: 300px;
+            height: 250px;
             border-radius: 12px;
-            margin: 0 auto;
-            display: block;
             background-color: #000;
+            margin-bottom: 16px;
         }
 
         .result-card {
@@ -226,15 +231,20 @@
             }
 
             .scanner-card {
-                margin: -20px;
+                margin: 0;
                 border-radius: 0;
-                padding: 20px;
+                padding: 16px;
+                gap: 16px;
             }
 
             #scanner {
                 width: 100%;
                 max-width: none;
-                height: 250px;
+                height: 200px;
+            }
+
+            .container {
+                gap: 8px;
             }
         }
 
@@ -256,7 +266,8 @@
         </div>
 
         <div class="scanner-card">
-            <video id="scanner" playsinline autoplay></video>
+            <video id="scanner" playsinline muted></video>
+            <button onclick="startBarcodeScanning()" style="padding: 8px 16px; border: none; background: var(--primary-blue); color: white; border-radius: 8px; cursor: pointer;">Start Scanning</button>
         </div>
 
         <div class="result-card">
@@ -324,20 +335,22 @@
             });
         }
 
-        navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
-            .then(stream => {
-                video.srcObject = stream;
-                video.setAttribute("playsinline", true);
-                video.play();
-                startBarcodeScanning();
-            })
-            .catch(err => {
-                console.error("Error accessing camera:", err);
-                resultElement.textContent = "Error accessing camera.";
-                resultElement.classList.add('warning');
-            });
-
         function startBarcodeScanning() {
+            navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+                .then(stream => {
+                    video.srcObject = stream;
+                    video.setAttribute("playsinline", true);
+                    video.play();
+                    initializeQuagga();
+                })
+                .catch(err => {
+                    console.error("Error accessing camera:", err);
+                    resultElement.textContent = "Error accessing camera.";
+                    resultElement.classList.add('warning');
+                });
+        }
+
+        function initializeQuagga() {
             Quagga.init({
                 inputStream: {
                     name: "Live",
