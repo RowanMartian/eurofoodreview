@@ -341,7 +341,7 @@
                     video.srcObject = stream;
                     video.setAttribute("playsinline", true);
                     video.play();
-                    initializeQuagga();
+                    initializeQuagga(stream); // Pass stream to Quagga initialization
                 })
                 .catch(err => {
                     console.error("Error accessing camera:", err);
@@ -350,7 +350,7 @@
                 });
         }
 
-        function initializeQuagga() {
+        function initializeQuagga(stream) {
             Quagga.init({
                 inputStream: {
                     name: "Live",
